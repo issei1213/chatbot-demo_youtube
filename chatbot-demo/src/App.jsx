@@ -2,7 +2,8 @@ import React from 'react';
 import './assets/styles/style.css';
 import defaultDataset from "./dataset";
 import {AnswersList, Chats} from "./components/index";
-import { BorderAll } from '@material-ui/icons';
+// import { BorderAll } from '@material-ui/icons';
+import FormDialog from "./components/Forms/FormDialog";
 
 
 export default class App extends React.Component {
@@ -15,7 +16,9 @@ export default class App extends React.Component {
       dataset: defaultDataset,
       open: false
     }
-    this.selectAnswer = this.selectAnswer.bind(this)
+    this.selectAnswer = this.selectAnswer.bind(this);
+    this.handleClickOpen = this.handleClickOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
   displayNextQuestion = (nextQuestionId) => {
@@ -32,18 +35,25 @@ export default class App extends React.Component {
     })
   }
 
-
   selectAnswer = (selectedAnswer, nextQuestionId) => {
     switch(true) {
       case (nextQuestionId === "init"):
         setTimeout(() => this.displayNextQuestion(nextQuestionId), 500)
         break;
+
+      case (nextQuestionId === "contact"):
+        this.handleClickOpen()
+        break;
+
       case (/^https:*/.test(nextQuestionId)):
         const a = document.createElement("a");
         a.href = nextQuestionId;
         a.target = "_blank";
         a.click();
         break;
+      
+
+
       default:
         const chats = this.state.chats;
         chats.push({
@@ -58,8 +68,15 @@ export default class App extends React.Component {
         setTimeout(() => this.displayNextQuestion(nextQuestionId), 1000);
         break;
     }
-
   }
+
+  handleClickOpen = () => {
+    this.setState({open: true});
+  };
+
+  handleClose = () => {
+    this.setState({open: false});
+  };
 
   componentDidMount() {
     const initAnswer = "";
@@ -79,6 +96,7 @@ export default class App extends React.Component {
           <div className="c-box">
             <Chats chats={this.state.chats} />
             <AnswersList answers={this.state.answers} select={this.selectAnswer}/>
+            <FormDialog open={this.state.open} handleClose={this.handleClose}/>
           </div>
         </section>
       );
