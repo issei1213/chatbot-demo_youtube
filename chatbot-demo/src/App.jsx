@@ -51,8 +51,6 @@ export default class App extends React.Component {
         a.click();
         break;
       
-
-
       default:
         const chats = this.state.chats;
         chats.push({
