@@ -21,7 +21,7 @@ const App = () => {
       setCurrentId(nextQuestionId);
   }
 
-  const selectAnswer = (selectedAnswer, nextQuestionId) => {
+  const selectAnswer = useCallback((selectedAnswer, nextQuestionId) => {
     switch(true) {
       case (nextQuestionId === "contact"):
         handleClickOpen()
@@ -40,29 +40,24 @@ const App = () => {
           type: "answer",
         })
 
-        this.setState({
-          chats: chats
-        })
-
         setTimeout(() => displayNextQuestion(nextQuestionId, dataset[nextQuestionId]), 1000);
         break;
     }
-  }
+  },[answers])
 
-  const addChats = (chat) => {
+  const addChats = useCallback((chat) => {
     setChats(prevChat => {
       return [...prevChat, chat]
     })
-  }
+  },[setChats])
 
-  const handleClickOpen = () => {
+  const handleClickOpen = useCallback(() => {
     setOpen(true);
-  };
+  },[setOpen]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
-    this.setState({open: false});
-  };
+  },[setOpen]);
 
   useEffect(() => {
     (async() => {
